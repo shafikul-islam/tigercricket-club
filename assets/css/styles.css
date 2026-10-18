@@ -279,23 +279,29 @@ img { display: block; max-width: 100%; }
   to { transform: scale(1.12) translate(-2.5%, -1.5%); }
 }
 
-/* camera flashes popping in the crowd */
-.hero__flashes span {
-  position: absolute; width: 3px; height: 3px; border-radius: 50%;
-  background: #fff; box-shadow: 0 0 8px 3px rgba(255,255,255,.75);
-  opacity: 0;
-  animation: camflash var(--d, 6s) var(--delay, 0s) infinite;
+/* clouds drifting over the ground */
+.hero__clouds { position: absolute; inset: 0 0 50% 0; overflow: hidden; pointer-events: none; }
+.hero__bg.is-photo ~ .hero__clouds { display: none; }
+.hero__clouds i {
+  position: absolute; left: -30%;
+  width: 260px; height: 70px; border-radius: 50%;
+  background:
+    radial-gradient(closest-side at 30% 60%, rgba(255,255,255,.95), rgba(255,255,255,0)),
+    radial-gradient(closest-side at 55% 40%, rgba(255,255,255,.95), rgba(255,255,255,0)),
+    radial-gradient(closest-side at 75% 62%, rgba(255,255,255,.9), rgba(255,255,255,0));
+  filter: blur(2px);
+  animation: cloud 80s linear infinite;
 }
-@keyframes camflash {
-  0%, 90%, 100% { opacity: 0; }
-  92% { opacity: 1; }
-  95% { opacity: .15; }
-}
+.hero__clouds i:nth-child(1) { top: 9%; animation-duration: 95s; animation-delay: -20s; }
+.hero__clouds i:nth-child(2) { top: 22%; width: 340px; height: 90px; animation-duration: 120s; animation-delay: -70s; opacity: .85; }
+.hero__clouds i:nth-child(3) { top: 4%; width: 200px; height: 56px; animation-duration: 80s; animation-delay: -50s; opacity: .8; }
+.hero__clouds i:nth-child(4) { top: 30%; width: 300px; height: 70px; animation-duration: 140s; animation-delay: -110s; opacity: .7; }
+@keyframes cloud { to { transform: translateX(170vw); } }
 .hero__shade {
   position: absolute; inset: 0; pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(18,12,29,.88) 0%, rgba(45,17,82,.6) 34%, rgba(45,17,82,.1) 62%, transparent 100%),
-    linear-gradient(180deg, rgba(18,12,29,.35) 0%, transparent 22%, transparent 78%, rgba(18,12,29,.75) 100%);
+    linear-gradient(90deg, rgba(6,32,18,.82) 0%, rgba(10,50,26,.55) 34%, rgba(10,50,26,.08) 62%, transparent 100%),
+    linear-gradient(180deg, rgba(4,28,40,.4) 0%, transparent 20%, transparent 80%, rgba(18,12,29,.7) 100%);
 }
 .hero__fx { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
 
@@ -405,17 +411,17 @@ img { display: block; max-width: 100%; }
 .bail { position: absolute; top: -4px; width: 12px; height: 4px; border-radius: 2px; background: linear-gradient(180deg, #fff3d4, #c9a15e); }
 .bail--1 { left: 0; }
 .bail--2 { left: 11px; }
-.stumps::after {
+.pitchline--bowled .stumps::after {
   content: "BOWLED!"; position: absolute; left: 50%; top: -34px; transform: translate(-50%, 6px) scale(.6);
   font: 400 1.1rem/1 "Anton", sans-serif; letter-spacing: .06em; color: var(--tiger); opacity: 0; white-space: nowrap;
 }
 
-.pitchline.in .pitchline__ball { animation: bowl 1.05s cubic-bezier(.35,.1,.55,1) forwards; }
-.pitchline.in .stumps i:nth-child(2) { animation: knock .6s 1s cubic-bezier(.2,1.6,.4,1) forwards; }
-.pitchline.in .stumps i:nth-child(3) { animation: knock2 .6s 1.05s ease-out forwards; }
-.pitchline.in .bail--1 { animation: bail1 .9s 1s cubic-bezier(.2,.7,.4,1) forwards; }
-.pitchline.in .bail--2 { animation: bail2 .9s 1s cubic-bezier(.2,.7,.4,1) forwards; }
-.pitchline.in .stumps::after { animation: bowled 1.6s 1.05s ease forwards; }
+.pitchline--bowled.in .pitchline__ball { animation: bowl 1.05s cubic-bezier(.35,.1,.55,1) forwards; }
+.pitchline--bowled.in .stumps i:nth-child(2) { animation: knock .6s 1s cubic-bezier(.2,1.6,.4,1) forwards; }
+.pitchline--bowled.in .stumps i:nth-child(3) { animation: knock2 .6s 1.05s ease-out forwards; }
+.pitchline--bowled.in .bail--1 { animation: bail1 .9s 1s cubic-bezier(.2,.7,.4,1) forwards; }
+.pitchline--bowled.in .bail--2 { animation: bail2 .9s 1s cubic-bezier(.2,.7,.4,1) forwards; }
+.pitchline--bowled.in .stumps::after { animation: bowled 1.6s 1.05s ease forwards; }
 
 @keyframes bowl {
   0% { left: -3%; transform: translateY(-260%) rotate(0); opacity: 1; }
@@ -431,6 +437,67 @@ img { display: block; max-width: 100%; }
   20% { opacity: 1; transform: translate(-50%, 0) scale(1.1); }
   80% { opacity: 1; transform: translate(-50%, -4px) scale(1); }
   100% { opacity: 0; transform: translate(-50%, -10px) scale(1); }
+}
+
+/* ============================================================
+   PITCH DIVIDER — two batsmen run two
+   ============================================================ */
+.pitchline--runs { height: 150px; }
+.pitchline--runs .pitchline__strip { top: 74%; }
+.crease--l2 { left: 11%; }
+.crease--r2 { right: 11%; }
+.pitchline--runs .stumps { bottom: calc(26% + 4px); }
+.stumps--l { left: 5%; right: auto; }
+.stumps--r { right: 5%; }
+.runner { position: absolute; width: 58px; height: 84px; }
+.runner svg { width: 100%; height: 100%; overflow: visible; }
+.runner--a { left: 9%; bottom: calc(26% + 2px); z-index: 2; }
+.runner--b { left: calc(89% - 58px); bottom: calc(26% + 12px); transform: scaleX(-1) scale(.9); z-index: 1; }
+.runner .leg { transform-box: view-box; }
+.runner .leg--front { transform-origin: 22px 36px; }
+.runner .leg--back { transform-origin: 19px 36px; }
+.runner .bob { transform-box: view-box; }
+
+.pitchline--runs.in .runner--a { animation: runA 3.4s ease-in-out forwards; }
+.pitchline--runs.in .runner--b { animation: runB 3.4s ease-in-out forwards; }
+.pitchline--runs.in .leg--front { animation: stride .26s ease-in-out 13 alternate; }
+.pitchline--runs.in .leg--back { animation: stride .26s ease-in-out 13 alternate-reverse; }
+.pitchline--runs.in .bob { animation: bob .13s ease-in-out 26 alternate; }
+
+@keyframes runA {
+  0% { left: 9%; transform: scaleX(1); }
+  46% { left: calc(89% - 58px); transform: scaleX(1); }
+  54% { left: calc(89% - 58px); transform: scaleX(-1); }
+  100% { left: 9%; transform: scaleX(-1); }
+}
+@keyframes runB {
+  0% { left: calc(89% - 58px); transform: scaleX(-1) scale(.9); }
+  46% { left: 9%; transform: scaleX(-1) scale(.9); }
+  54% { left: 9%; transform: scaleX(1) scale(.9); }
+  100% { left: calc(89% - 58px); transform: scaleX(1) scale(.9); }
+}
+@keyframes stride { from { transform: rotate(26deg); } to { transform: rotate(-26deg); } }
+@keyframes bob { from { transform: translateY(0); } to { transform: translateY(-1.6px); } }
+
+.runs-pop {
+  position: absolute; left: 50%; top: 2px;
+  font: 400 1.25rem/1 "Anton", sans-serif; letter-spacing: .06em; color: var(--tiger);
+  opacity: 0; transform: translate(-50%, 8px) scale(.6); white-space: nowrap;
+}
+.runs-pop--2 { color: var(--purple); font-size: 1.4rem; }
+.pitchline--runs.in .runs-pop--1 { animation: popRun 1s 1.45s ease forwards; }
+.pitchline--runs.in .runs-pop--2 { animation: popRun2 1.8s 3.3s ease forwards; }
+@keyframes popRun {
+  0% { opacity: 0; transform: translate(-50%, 8px) scale(.6); }
+  25% { opacity: 1; transform: translate(-50%, 0) scale(1.1); }
+  70% { opacity: 1; transform: translate(-50%, -4px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -10px) scale(1); }
+}
+@keyframes popRun2 {
+  0% { opacity: 0; transform: translate(-50%, 8px) scale(.6); }
+  20% { opacity: 1; transform: translate(-50%, 0) scale(1.12); }
+  85% { opacity: 1; transform: translate(-50%, -2px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -8px) scale(1); }
 }
 
 /* ============================================================
@@ -679,7 +746,7 @@ img { display: block; max-width: 100%; }
 
   .hero__shade {
     background:
-      linear-gradient(180deg, rgba(18,12,29,.65) 0%, rgba(45,17,82,.55) 45%, rgba(18,12,29,.92) 100%);
+      linear-gradient(180deg, rgba(4,28,40,.35) 0%, rgba(8,44,24,.42) 45%, rgba(6,26,16,.85) 100%);
   }
   .hero__cta { gap: 16px; }
   .board__grid { grid-template-columns: repeat(2, 1fr); gap: 22px 12px; }

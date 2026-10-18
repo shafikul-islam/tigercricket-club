@@ -244,7 +244,6 @@
   const ctx = canvas.getContext("2d");
   const sceneCanvas = $("#heroScene");
   const sctx = sceneCanvas.getContext("2d");
-  const flashesEl = $("#heroFlashes");
   const donateBtn = $("#heroDonate");
   const ballTarget = $("#heroBallTarget");
 
@@ -257,7 +256,6 @@
     if (sceneMode) {
       sceneCanvas.width = W * dpr; sceneCanvas.height = H * dpr;
       drawScene();
-      placeFlashes();
     }
   }
 
@@ -316,7 +314,7 @@
     c.restore();
   }
 
-  /* ---- night match under the floodlights, drawn once per resize ---- */
+  /* ---- a sunny match day at the ground, drawn once per resize ---- */
   function drawScene() {
     const c = sctx;
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -324,81 +322,91 @@
     const sg = sceneGeo();
     const hz = sg.horizon, st = sg.standTop;
     const R = rng(42);
-    const towers = (sg.narrow ? [0.12, 0.88] : [0.07, 0.33, 0.67, 0.93]).map((tx) => ({ x: tx * W, top: hz * (0.12 + R() * 0.06) }));
+    const sun = { x: W * (sg.narrow ? 0.85 : 0.8), y: hz * 0.2 };
+    const towers = (sg.narrow ? [0.1, 0.9] : [0.06, 0.94]).map((tx) => ({ x: tx * W, top: hz * (0.14 + R() * 0.04) }));
 
-    // sky + stars
+    // blue sky with the sun
     let g = c.createLinearGradient(0, 0, 0, hz);
-    g.addColorStop(0, "#06030e"); g.addColorStop(0.55, "#1a0b35"); g.addColorStop(1, "#45205e");
+    g.addColorStop(0, "#2f86d6"); g.addColorStop(0.6, "#74b8ee"); g.addColorStop(1, "#cfe9f8");
     c.fillStyle = g; c.fillRect(0, 0, W, hz);
-    for (let i = 0; i < 120; i++) {
-      c.fillStyle = `rgba(255,255,255,${0.2 + R() * 0.6})`;
-      c.beginPath(); c.arc(R() * W, R() * hz * 0.55, R() * 1.1 + 0.25, 0, Math.PI * 2); c.fill();
-    }
+    const sunG = c.createRadialGradient(sun.x, sun.y, 0, sun.x, sun.y, H * 0.42);
+    sunG.addColorStop(0, "rgba(255,255,240,1)");
+    sunG.addColorStop(0.06, "rgba(255,250,215,.95)");
+    sunG.addColorStop(0.22, "rgba(255,240,190,.35)");
+    sunG.addColorStop(1, "rgba(255,240,190,0)");
+    c.fillStyle = sunG; c.fillRect(0, 0, W, hz);
 
-    // floodlight halos in the sky
+    // floodlight towers (switched off in daylight)
     towers.forEach((t) => {
-      const gl = c.createRadialGradient(t.x, t.top, 0, t.x, t.top, H * 0.34);
-      gl.addColorStop(0, "rgba(255,246,220,.55)");
-      gl.addColorStop(0.22, "rgba(255,220,150,.16)");
-      gl.addColorStop(1, "rgba(255,220,150,0)");
-      c.fillStyle = gl; c.fillRect(t.x - H * 0.34, t.top - H * 0.34, H * 0.68, H * 0.68);
+      c.strokeStyle = "#5e6e7c"; c.lineWidth = 4;
+      c.beginPath(); c.moveTo(t.x, t.top + 8); c.lineTo(t.x, st); c.stroke();
+      const pw = sg.narrow ? 26 : 40, ph = pw * 0.5;
+      c.fillStyle = "#4b5966"; c.fillRect(t.x - pw / 2 - 2, t.top - ph / 2 - 2, pw + 4, ph + 4);
+      c.fillStyle = "#dfe6ec";
+      const cw = pw / 5, chh = ph / 2;
+      for (let i = 0; i < 5; i++) for (let j = 0; j < 2; j++) c.fillRect(t.x - pw / 2 + i * cw + 1, t.top - ph / 2 + j * chh + 1, cw - 2, chh - 2);
     });
 
-    // the stands and the crowd
+    // the stands under a white canopy, packed with a colourful crowd
+    const roofH = Math.max(H * 0.022, 10);
     g = c.createLinearGradient(0, st, 0, hz);
-    g.addColorStop(0, "#1d1133"); g.addColorStop(1, "#110a1f");
+    g.addColorStop(0, "#41566b"); g.addColorStop(1, "#5f7488");
     c.fillStyle = g; c.fillRect(0, st, W, hz - st);
-    c.fillStyle = "#2c1d44"; c.fillRect(0, st - 3, W, 3);
-    const crowd = ["#5a4580", "#7a5aa8", "#a08455", "#c9b27a", "#8a3a4a", "#3d3260", "#d8d0ee", "#6b5a3a", "#FDD023"];
+    const crowd = ["#ffd23f", "#ff6b35", "#ffffff", "#4a90d9", "#e63946", "#2a9d8f", "#f4a261", "#6a4c93", "#90be6d", "#FDD023"];
     const boardH = Math.max(H * 0.018, 9);
-    for (let y = st + 5; y < hz - boardH - 3; y += 4.2) {
+    for (let y = st + roofH + 3; y < hz - boardH - 3; y += 4.2) {
       for (let x = R() * 4; x < W; x += 3.4 + R() * 1.6) {
-        // seats nearer a floodlight read brighter
-        const lit = towers.reduce((m, t) => Math.max(m, 1 - Math.abs(x - t.x) / (W * 0.3)), 0);
-        c.globalAlpha = clamp(0.25 + R() * 0.4 + lit * 0.3, 0, 1);
+        c.globalAlpha = 0.65 + R() * 0.35;
         c.fillStyle = crowd[(R() * crowd.length) | 0];
         c.fillRect(x, y + R() * 1.5, 2.2, 2.6);
       }
     }
     c.globalAlpha = 1;
-    c.fillStyle = "rgba(0,0,0,.28)";
+    c.fillStyle = "rgba(0,0,0,.12)";
     for (let y = st + 26; y < hz - boardH; y += 26) c.fillRect(0, y, W, 1.5);
+    // canopy + the shade it throws on the top rows
+    const shade = c.createLinearGradient(0, st, 0, st + (hz - st) * 0.45);
+    shade.addColorStop(0, "rgba(10,25,40,.45)"); shade.addColorStop(1, "rgba(10,25,40,0)");
+    c.fillStyle = shade; c.fillRect(0, st, W, (hz - st) * 0.45);
+    g = c.createLinearGradient(0, st - roofH, 0, st);
+    g.addColorStop(0, "#ffffff"); g.addColorStop(1, "#cfd8e0");
+    c.fillStyle = g; c.fillRect(0, st - roofH, W, roofH);
+    c.fillStyle = "rgba(0,0,0,.15)"; c.fillRect(0, st, W, 2);
 
     // advertising boards along the boundary
-    const segs = ["#461D7C", "#FDD023", "#1a1030", "#F26A1B"];
+    const segs = ["#461D7C", "#FDD023", "#ffffff", "#F26A1B"];
     c.font = `800 ${Math.round(boardH * 0.68)}px Inter, sans-serif`;
     c.textBaseline = "middle";
     for (let i = 0, x = -20; x < W; i++, x += 120) {
       const col = segs[i % segs.length];
       c.fillStyle = col; c.fillRect(x, hz - boardH, 118, boardH);
-      c.fillStyle = col === "#FDD023" ? "#2d1152" : col === "#F26A1B" ? "#fff" : "#FDD023";
+      c.fillStyle = col === "#461D7C" ? "#FDD023" : col === "#F26A1B" ? "#fff" : "#2d1152";
       c.fillText(i % 2 ? "LCA CRICKET" : "BR TIGERS", x + 12, hz - boardH / 2 + 1);
     }
 
-    // outfield
+    // bright, freshly mown outfield
     g = c.createLinearGradient(0, hz, 0, H);
-    g.addColorStop(0, "#123a1b"); g.addColorStop(0.4, "#1f5e2a"); g.addColorStop(1, "#2b7c37");
+    g.addColorStop(0, "#3f8f34"); g.addColorStop(0.45, "#52ad3f"); g.addColorStop(1, "#63c24a");
     c.fillStyle = g; c.fillRect(0, hz, W, H - hz);
     c.save();
     c.beginPath(); c.rect(0, hz, W, H - hz); c.clip();
-    // mowing stripes running to the far end
     const vp = { x: sg.far.x, y: hz - H * 0.06 };
     const band = W * 0.09;
-    c.fillStyle = "rgba(255,255,255,.045)";
-    for (let i = -16; i < 16; i += 2) {
+    for (let i = -16; i < 16; i++) {
       const x0 = sg.near.x + i * band;
+      c.fillStyle = i % 2 ? "rgba(20,70,10,.07)" : "rgba(255,255,220,.08)";
       c.beginPath(); c.moveTo(vp.x, vp.y); c.lineTo(x0, H * 1.05); c.lineTo(x0 + band, H * 1.05); c.closePath(); c.fill();
     }
     // boundary rope + 30-yard circle
-    c.strokeStyle = "rgba(255,255,255,.55)"; c.lineWidth = 1.5;
+    c.strokeStyle = "rgba(255,255,255,.85)"; c.lineWidth = 2;
     c.beginPath(); c.ellipse(W * 0.5, hz + 2, W * 0.95, H * 0.03, 0, 0, Math.PI); c.stroke();
     const mid = sg.at(0.3);
-    c.setLineDash([6, 9]); c.strokeStyle = "rgba(255,255,255,.17)";
+    c.setLineDash([6, 9]); c.strokeStyle = "rgba(255,255,255,.4)"; c.lineWidth = 1.5;
     c.beginPath(); c.ellipse(mid.x, mid.y, W * 0.42, (H - hz) * 0.36, 0, 0, Math.PI * 2); c.stroke();
     c.setLineDash([]);
-    // pools of floodlight on the grass
-    const pool = c.createRadialGradient(W * 0.62, hz + (H - hz) * 0.3, 0, W * 0.62, hz + (H - hz) * 0.3, W * 0.45);
-    pool.addColorStop(0, "rgba(255,250,220,.09)"); pool.addColorStop(1, "rgba(255,250,220,0)");
+    // sunlight washing across the grass
+    const pool = c.createRadialGradient(sun.x, hz, 0, sun.x, hz, W * 0.6);
+    pool.addColorStop(0, "rgba(255,250,200,.18)"); pool.addColorStop(1, "rgba(255,250,200,0)");
     c.fillStyle = pool; c.fillRect(0, hz, W, H - hz);
     c.restore();
 
@@ -408,86 +416,47 @@
     c.moveTo(a.x - sg.farHalf, a.y); c.lineTo(a.x + sg.farHalf, a.y);
     c.lineTo(b.x + sg.nearHalf, b.y); c.lineTo(b.x - sg.nearHalf, b.y); c.closePath();
     g = c.createLinearGradient(0, a.y, 0, b.y);
-    g.addColorStop(0, "#9c8352"); g.addColorStop(1, "#dcc38d");
+    g.addColorStop(0, "#c2a872"); g.addColorStop(1, "#ead7a8");
     c.fillStyle = g; c.fill();
-    // scuffs where the ball pitches and the bowler lands
     [[0.42, 0.55], [0.08, 0.5], [0.9, 0.35]].forEach(([u, s]) => {
       const p = sg.at(u);
-      c.fillStyle = "rgba(110,85,48,.22)";
+      c.fillStyle = "rgba(140,110,60,.2)";
       c.beginPath(); c.ellipse(p.x, p.y, p.half * s, Math.max(p.half * 0.12, 1.5), 0, 0, Math.PI * 2); c.fill();
     });
-    // creases
     const crease = (u, ext) => {
       const p = sg.at(u);
-      c.strokeStyle = "rgba(255,255,255,.92)"; c.lineWidth = lerp(1, 3.2, u);
+      c.strokeStyle = "rgba(255,255,255,.95)"; c.lineWidth = lerp(1, 3.2, u);
       c.beginPath(); c.moveTo(p.x - p.half * ext, p.y); c.lineTo(p.x + p.half * ext, p.y); c.stroke();
     };
     crease(0.02, 1.0); crease(0.065, 1.7); crease(0.935, 1.7);
-    // stumps at the bowler's end
     const s0 = sg.at(0.02), sh = Math.max(H * 0.03, 10);
-    c.strokeStyle = "#f3e6c8"; c.lineWidth = Math.max(1.4, W * 0.0012);
+    c.strokeStyle = "#fbf3df"; c.lineWidth = Math.max(1.4, W * 0.0012);
     [-1, 0, 1].forEach((k) => { c.beginPath(); c.moveTo(s0.x + k * s0.half * 0.35, s0.y); c.lineTo(s0.x + k * s0.half * 0.35, s0.y - sh); c.stroke(); });
 
-    // umpire, bowler at the top of his mark, and the fielders
-    const opp = { shirt: "#24408e", pants: "#e9eef7", hat: "#16285c" };
-    drawFigure(c, a.x - sg.farHalf * 3.2, a.y + 2, H * 0.07, { shirt: "#eeeeee", pants: "#1a1a1a", hat: "#f5f5f5" });
-    drawFigure(c, a.x + sg.farHalf * 2.4, a.y + 4, H * 0.078, opp);
+    // umpire, bowler at the top of his mark, and the fielders (with shadows)
+    const opp = { shirt: "#24408e", pants: "#f4f6fb", hat: "#16285c" };
+    const person = (x, y, h, kit) => {
+      c.fillStyle = "rgba(0,40,0,.22)";
+      c.beginPath(); c.ellipse(x - h * 0.18, y, h * 0.28, h * 0.06, 0, 0, Math.PI * 2); c.fill();
+      drawFigure(c, x, y, h, kit);
+    };
+    person(a.x - sg.farHalf * 3.2, a.y + 2, H * 0.07, { shirt: "#ffffff", pants: "#1a1a1a", hat: "#ffffff" });
+    person(a.x + sg.farHalf * 2.4, a.y + 4, H * 0.078, opp);
     const fielders = sg.narrow
       ? [[0.2, 0.1], [0.42, 0.06], [0.9, 0.16], [0.3, 0.32]]
       : [[0.14, 0.12], [0.3, 0.3], [0.47, 0.07], [0.88, 0.14], [0.56, 0.42], [0.95, 0.4]];
     fielders.forEach(([fx, fy]) => {
       const y = hz + (H - hz) * fy;
-      drawFigure(c, fx * W, y, lerp(H * 0.038, H * 0.13, fy), opp);
+      person(fx * W, y, lerp(H * 0.038, H * 0.13, fy), opp);
     });
 
-    // floodlight beams falling on the field
-    c.save();
-    c.globalCompositeOperation = "lighter";
-    towers.forEach((t) => {
-      const cx = lerp(t.x, W * 0.6, 0.65);
-      const bg = c.createLinearGradient(0, t.top, 0, H);
-      bg.addColorStop(0, "rgba(255,244,214,.09)"); bg.addColorStop(1, "rgba(255,244,214,0)");
-      c.fillStyle = bg;
-      c.beginPath(); c.moveTo(t.x - 12, t.top); c.lineTo(t.x + 12, t.top);
-      c.lineTo(cx + W * 0.14, H); c.lineTo(cx - W * 0.14, H); c.closePath(); c.fill();
-    });
-    c.restore();
-
-    // floodlight towers on the stand roof
-    towers.forEach((t) => {
-      c.strokeStyle = "#0d0718"; c.lineWidth = 4;
-      c.beginPath(); c.moveTo(t.x, t.top + 8); c.lineTo(t.x, st); c.stroke();
-      const pw = sg.narrow ? 26 : 40, ph = pw * 0.5;
-      c.fillStyle = "#1a1226"; c.fillRect(t.x - pw / 2 - 2, t.top - ph / 2 - 2, pw + 4, ph + 4);
-      c.shadowColor = "rgba(255,240,200,.95)"; c.shadowBlur = 18;
-      c.fillStyle = "#fff6dc";
-      const cw = pw / 5, chh = ph / 2;
-      for (let i = 0; i < 5; i++) for (let j = 0; j < 2; j++) c.fillRect(t.x - pw / 2 + i * cw + 1, t.top - ph / 2 + j * chh + 1, cw - 2, chh - 2);
-      c.shadowBlur = 0;
-    });
-
-    // haze on the horizon + vignette
+    // soft haze on the horizon + light vignette
     g = c.createLinearGradient(0, hz - H * 0.05, 0, hz + H * 0.06);
-    g.addColorStop(0, "rgba(190,160,255,0)"); g.addColorStop(0.5, "rgba(190,160,255,.09)"); g.addColorStop(1, "rgba(190,160,255,0)");
+    g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.5, "rgba(255,255,255,.18)"); g.addColorStop(1, "rgba(255,255,255,0)");
     c.fillStyle = g; c.fillRect(0, hz - H * 0.05, W, H * 0.11);
-    const vg = c.createRadialGradient(W * 0.55, H * 0.55, Math.min(W, H) * 0.3, W * 0.55, H * 0.55, Math.max(W, H) * 0.85);
-    vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,.55)");
+    const vg = c.createRadialGradient(W * 0.55, H * 0.55, Math.min(W, H) * 0.35, W * 0.55, H * 0.55, Math.max(W, H) * 0.9);
+    vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,20,10,.3)");
     c.fillStyle = vg; c.fillRect(0, 0, W, H);
-  }
-
-  // camera flashes popping in the stands
-  function placeFlashes() {
-    const sg = sceneGeo();
-    flashesEl.innerHTML = "";
-    if (reduceMotion) return;
-    for (let i = 0; i < 18; i++) {
-      const sp = document.createElement("span");
-      sp.style.left = (Math.random() * 100).toFixed(1) + "%";
-      sp.style.top = (((sg.standTop + Math.random() * (sg.horizon - sg.standTop) * 0.85) / H) * 100).toFixed(1) + "%";
-      sp.style.setProperty("--d", (4 + Math.random() * 6).toFixed(1) + "s");
-      sp.style.setProperty("--delay", (-Math.random() * 9).toFixed(1) + "s");
-      flashesEl.appendChild(sp);
-    }
   }
 
   resize();
@@ -750,7 +719,7 @@
       if (!f.six && k > 0.42) {
         f.six = true;
         // fireworks at the top of the flight
-        burst(bx, by, 80, { min: 120, max: 420, life: 1.4, gravity: 240, size: [1.6, 3.2], colors: ["#FDD023", "#fff3c4", "#F26A1B", "#b88cff", "#ffffff"], streak: true });
+        burst(bx, by, 80, { min: 120, max: 420, life: 1.4, gravity: 240, size: [1.6, 3.2], colors: ["#FDD023", "#F26A1B", "#e8402c", "#461D7C", "#ffffff"], streak: true });
       }
     } else {
       // 3) caught by the Donate button

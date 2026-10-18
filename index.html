@@ -27,6 +27,11 @@
         <stop offset=".45" stop-color="#c41d12" />
         <stop offset="1" stop-color="#5e0904" />
       </radialGradient>
+      <linearGradient id="jersey" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FDD023" />
+        <stop offset=".55" stop-color="#F26A1B" />
+        <stop offset="1" stop-color="#d4231a" />
+      </linearGradient>
     </defs>
     <symbol id="ballSym" viewBox="0 0 100 100">
       <circle cx="50" cy="50" r="48" fill="url(#leather)" />
@@ -69,7 +74,7 @@
   <section class="hero" id="home">
     <!-- Stadium drawn in code (or a photo/video, if set in data.js) -->
     <div class="hero__bg" id="heroBg"><canvas class="hero__scene" id="heroScene" aria-hidden="true"></canvas></div>
-    <div class="hero__flashes" id="heroFlashes" aria-hidden="true"></div>
+    <div class="hero__clouds" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="hero__shade" aria-hidden="true"></div>
 
     <!-- Shot animation layer: delivery, bat swing, ball into the Donate button -->
@@ -126,7 +131,7 @@
   </section>
 
   <!-- Ball rolls down the pitch and knocks the bails off -->
-  <div class="pitchline" aria-hidden="true">
+  <div class="pitchline pitchline--bowled" aria-hidden="true">
     <div class="pitchline__strip"><i class="crease crease--l"></i><i class="crease crease--r"></i></div>
     <svg class="pitchline__ball" viewBox="0 0 100 100"><use href="#ballSym" /></svg>
     <div class="stumps"><i></i><i></i><i></i><b class="bail bail--1"></b><b class="bail bail--2"></b></div>
@@ -173,10 +178,51 @@
     </div>
   </section>
 
-  <div class="pitchline" aria-hidden="true">
-    <div class="pitchline__strip"><i class="crease crease--l"></i><i class="crease crease--r"></i></div>
-    <svg class="pitchline__ball" viewBox="0 0 100 100"><use href="#ballSym" /></svg>
-    <div class="stumps"><i></i><i></i><i></i><b class="bail bail--1"></b><b class="bail bail--2"></b></div>
+  <!-- Two batsmen run two between the wickets -->
+  <div class="pitchline pitchline--runs" aria-hidden="true">
+    <div class="pitchline__strip"><i class="crease crease--l2"></i><i class="crease crease--r2"></i></div>
+    <div class="stumps stumps--l"><i></i><i></i><i></i></div>
+    <div class="stumps stumps--r"><i></i><i></i><i></i></div>
+    <div class="runner runner--a"><svg viewBox="0 0 44 64">
+        <g class="bob">
+          <g class="leg leg--back"><rect x="16" y="35" width="6" height="21" rx="2.5" fill="#ecece6" stroke="#cfcfc4" stroke-width=".6" /><rect x="14.5" y="55" width="9" height="4" rx="1.5" fill="#26262c" /></g>
+          <path d="M15 22 L12.5 32" stroke="#f2b632" stroke-width="3.6" stroke-linecap="round" />
+          <path d="M13 20 Q20 16 27 20 L28 36 H12 Z" fill="url(#jersey)" />
+          <path d="M17 19.5 L20 22.5 L23 19.5" stroke="#2747a8" stroke-width="1.6" fill="none" />
+          <g class="leg leg--front"><rect x="19" y="35" width="6" height="21" rx="2.5" fill="#f7f7f2" stroke="#cfcfc4" stroke-width=".6" /><rect x="18.5" y="55" width="9" height="4" rx="1.5" fill="#26262c" /></g>
+          <g transform="rotate(-28 31 30)">
+            <rect x="30" y="29" width="2.6" height="7" rx="1" fill="#222" />
+            <rect x="29.3" y="35.5" width="4.4" height="19" rx="1.6" fill="#e2c389" stroke="#b98f52" stroke-width=".6" />
+          </g>
+          <path d="M25 22 L31 30" stroke="#f7c948" stroke-width="3.6" stroke-linecap="round" />
+          <circle cx="31" cy="30" r="2.5" fill="#fff" />
+          <circle cx="23.5" cy="13.5" r="3.2" fill="#8a5a3c" />
+          <circle cx="20" cy="11" r="7" fill="#2b3f9a" />
+          <path d="M24.5 8.5 H31 L30 11 H24.5 Z" fill="#1e2d73" />
+          <path d="M25.5 12 V17 M28 12 V16.5 M25.5 14.5 H29.5" stroke="#c9ccd6" stroke-width=".9" />
+        </g>
+      </svg></div>
+    <div class="runner runner--b"><svg viewBox="0 0 44 64">
+        <g class="bob">
+          <g class="leg leg--back"><rect x="16" y="35" width="6" height="21" rx="2.5" fill="#ecece6" stroke="#cfcfc4" stroke-width=".6" /><rect x="14.5" y="55" width="9" height="4" rx="1.5" fill="#26262c" /></g>
+          <path d="M15 22 L12.5 32" stroke="#f2b632" stroke-width="3.6" stroke-linecap="round" />
+          <path d="M13 20 Q20 16 27 20 L28 36 H12 Z" fill="url(#jersey)" />
+          <path d="M17 19.5 L20 22.5 L23 19.5" stroke="#2747a8" stroke-width="1.6" fill="none" />
+          <g class="leg leg--front"><rect x="19" y="35" width="6" height="21" rx="2.5" fill="#f7f7f2" stroke="#cfcfc4" stroke-width=".6" /><rect x="18.5" y="55" width="9" height="4" rx="1.5" fill="#26262c" /></g>
+          <g transform="rotate(-28 31 30)">
+            <rect x="30" y="29" width="2.6" height="7" rx="1" fill="#222" />
+            <rect x="29.3" y="35.5" width="4.4" height="19" rx="1.6" fill="#e2c389" stroke="#b98f52" stroke-width=".6" />
+          </g>
+          <path d="M25 22 L31 30" stroke="#f7c948" stroke-width="3.6" stroke-linecap="round" />
+          <circle cx="31" cy="30" r="2.5" fill="#fff" />
+          <circle cx="23.5" cy="13.5" r="3.2" fill="#8a5a3c" />
+          <circle cx="20" cy="11" r="7" fill="#2b3f9a" />
+          <path d="M24.5 8.5 H31 L30 11 H24.5 Z" fill="#1e2d73" />
+          <path d="M25.5 12 V17 M28 12 V16.5 M25.5 14.5 H29.5" stroke="#c9ccd6" stroke-width=".9" />
+        </g>
+      </svg></div>
+    <span class="runs-pop runs-pop--1">+1</span>
+    <span class="runs-pop runs-pop--2">+2 RUNS</span>
   </div>
 
   <!-- ===================== GALLERY ===================== -->
