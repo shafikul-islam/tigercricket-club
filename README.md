@@ -35,6 +35,10 @@ Open `assets/js/data.js`. Examples:
 - **Set your real donate links** → fill in `donate.methods` (Zelle / Venmo / GoFundMe).
 - **Change the club email / Facebook** → edit the `links` block.
 - **Add a photo** → drop the file in `assets/img/`, then add it to `gallery`.
+- **Change the hero background** → in the `hero` block: leave `background`
+  and `video` empty for the stadium drawn in code, set `background` to a
+  photo path, or set `video` to an `.mp4` clip (muted, looping).
+- **Donation tiers** → edit `donate.tiers` (Single / Boundary / Six / Century).
 
 Save the file, refresh the page. Done.
 

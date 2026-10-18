@@ -10,22 +10,39 @@
   <meta property="og:title" content="Baton Rouge Tigers Cricket Club" />
   <meta property="og:description" content="Student cricket. Championship ambition. The road to LSU Cricket." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/img/team-group.webp" />
+  <meta property="og:image" content="https://tigercricket.club/assets/img/team-group.webp" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
+
+  <!-- Reusable cricket ball graphic (leather, seam, stitches) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <radialGradient id="leather" cx="35%" cy="30%" r="75%">
+        <stop offset="0" stop-color="#ff6b4f" />
+        <stop offset=".45" stop-color="#c41d12" />
+        <stop offset="1" stop-color="#5e0904" />
+      </radialGradient>
+    </defs>
+    <symbol id="ballSym" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="48" fill="url(#leather)" />
+      <path d="M38 4 C 54 30, 54 70, 38 96" fill="none" stroke="#f6e7c8" stroke-width="2.4" />
+      <path d="M62 4 C 46 30, 46 70, 62 96" fill="none" stroke="#f6e7c8" stroke-width="2.4" />
+      <path d="M33 8 C 48 32, 48 68, 33 92" fill="none" stroke="#f6e7c8" stroke-width="2" stroke-dasharray="3 3.4" opacity=".9" />
+      <path d="M67 8 C 52 32, 52 68, 67 92" fill="none" stroke="#f6e7c8" stroke-width="2" stroke-dasharray="3 3.4" opacity=".9" />
+      <ellipse cx="34" cy="28" rx="13" ry="8" fill="#fff" opacity=".22" transform="rotate(-30 34 28)" />
+    </symbol>
+  </svg>
 
   <!-- ===================== NAV ===================== -->
   <header class="nav" id="nav">
     <div class="nav__inner">
       <a href="#home" class="brand" aria-label="Baton Rouge Tigers home">
-        <span class="brand__mark" aria-hidden="true">
-          <span class="ball"></span>
-        </span>
+        <svg class="brand__ball" viewBox="0 0 100 100" aria-hidden="true"><use href="#ballSym" /></svg>
         <span class="brand__text">BR <b>TIGERS</b></span>
       </a>
 
@@ -36,7 +53,10 @@
         <a href="#gallery">Gallery</a>
         <a href="#alumni">Alumni</a>
         <a href="#thanks">Thanks</a>
-        <a href="#donate" class="btn btn--gold btn--sm">Donate</a>
+        <a href="#donate" class="btn-ball btn-ball--sm">
+          <svg class="btn-ball__ball" viewBox="0 0 100 100" aria-hidden="true"><use href="#ballSym" /></svg>
+          <span>Donate</span>
+        </a>
       </nav>
 
       <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
@@ -47,25 +67,46 @@
 
   <!-- ===================== HERO ===================== -->
   <section class="hero" id="home">
-    <div class="hero__stripes" aria-hidden="true"></div>
-    <div class="hero__ball" aria-hidden="true"><span class="ball ball--xl"></span></div>
+    <!-- Stadium drawn in code (or a photo/video, if set in data.js) -->
+    <div class="hero__bg" id="heroBg"><canvas class="hero__scene" id="heroScene" aria-hidden="true"></canvas></div>
+    <div class="hero__flashes" id="heroFlashes" aria-hidden="true"></div>
+    <div class="hero__shade" aria-hidden="true"></div>
+
+    <!-- Shot animation layer: delivery, bat swing, ball into the Donate button -->
+    <canvas class="hero__fx" id="heroFx" aria-hidden="true"></canvas>
 
     <div class="hero__content">
       <p class="hero__eyebrow" id="heroEyebrow">Louisiana Cricket Association</p>
-      <h1 class="hero__title" id="heroTitle">Baton Rouge<br /><span>Tigers</span></h1>
+      <h1 class="hero__title">Baton Rouge<br /><span>Tigers</span></h1>
       <p class="hero__tag" id="heroTag"></p>
       <div class="hero__cta">
-        <a href="#donate" class="btn btn--gold">Support the Club</a>
-        <a href="#join" class="btn btn--ghost">Join the Tigers</a>
+        <a href="#donate" class="btn-ball" id="heroDonate">
+          <svg class="btn-ball__ball" id="heroBallTarget" viewBox="0 0 100 100" aria-hidden="true"><use href="#ballSym" /></svg>
+          <span>Support the Club</span>
+        </a>
+        <a href="#join" class="btn-bat">
+          <span class="btn-bat__handle" aria-hidden="true"></span>
+          <span class="btn-bat__blade">Join the Tigers</span>
+        </a>
       </div>
+      <p class="hero__hint"><span>●</span> Tap the field to play another shot</p>
     </div>
 
     <a href="#stats" class="hero__scroll" aria-label="Scroll down"><span></span></a>
   </section>
 
-  <!-- ===================== STATS ===================== -->
+  <!-- ===================== SCOREBOARD STATS ===================== -->
   <section class="stats" id="stats">
-    <div class="wrap stats__grid" id="statsGrid"></div>
+    <div class="wrap">
+      <div class="board">
+        <div class="board__head">
+          <span class="board__lamp"></span>
+          <span id="boardTitle">BATON ROUGE TIGERS · SCOREBOARD</span>
+          <span class="board__lamp"></span>
+        </div>
+        <div class="board__grid" id="statsGrid"></div>
+      </div>
+    </div>
   </section>
 
   <!-- ===================== ABOUT ===================== -->
@@ -84,7 +125,12 @@
     </div>
   </section>
 
-  <div class="divider" aria-hidden="true"><span class="ball ball--spin"></span></div>
+  <!-- Ball rolls down the pitch and knocks the bails off -->
+  <div class="pitchline" aria-hidden="true">
+    <div class="pitchline__strip"><i class="crease crease--l"></i><i class="crease crease--r"></i></div>
+    <svg class="pitchline__ball" viewBox="0 0 100 100"><use href="#ballSym" /></svg>
+    <div class="stumps"><i></i><i></i><i></i><b class="bail bail--1"></b><b class="bail bail--2"></b></div>
+  </div>
 
   <!-- ===================== SEASON / DYNAMIC ===================== -->
   <section class="section season" id="season">
@@ -92,14 +138,13 @@
       <div class="section__head reveal">
         <p class="kicker">On The Field</p>
         <h2>This Season</h2>
-        <p class="section__sub">Live scores and the league table update automatically once connected — see the README for how to plug in a data source.</p>
+        <p class="section__sub">Latest result and recent form — updated as the Tigers play.</p>
       </div>
 
       <div class="season__grid">
-        <!-- Live score widget (dynamic) -->
         <div class="card livescore reveal" id="liveScore">
           <div class="livescore__head">
-            <span class="live-dot"></span> LIVE / NEXT MATCH
+            <span class="live-dot"></span> LIVE / LATEST MATCH
           </div>
           <div class="livescore__body" id="liveScoreBody">
             <p class="muted">Connecting to live feed…</p>
@@ -107,10 +152,10 @@
           <p class="livescore__note" id="liveScoreNote"></p>
         </div>
 
-        <!-- Recent results -->
         <div class="card reveal">
           <h3 class="card__title">Recent Results</h3>
           <ul class="results" id="resultsList"></ul>
+          <div class="form-guide" id="formGuide"></div>
         </div>
       </div>
     </div>
@@ -128,7 +173,11 @@
     </div>
   </section>
 
-  <div class="divider" aria-hidden="true"><span class="ball ball--spin"></span></div>
+  <div class="pitchline" aria-hidden="true">
+    <div class="pitchline__strip"><i class="crease crease--l"></i><i class="crease crease--r"></i></div>
+    <svg class="pitchline__ball" viewBox="0 0 100 100"><use href="#ballSym" /></svg>
+    <div class="stumps"><i></i><i></i><i></i><b class="bail bail--1"></b><b class="bail bail--2"></b></div>
+  </div>
 
   <!-- ===================== GALLERY ===================== -->
   <section class="section gallery" id="gallery">
@@ -172,10 +221,15 @@
 
   <!-- ===================== DONATE ===================== -->
   <section class="section donate" id="donate">
-    <div class="donate__stripes" aria-hidden="true"></div>
-    <div class="wrap donate__inner reveal">
-      <h2 id="donateHeading">Support the Tigers</h2>
-      <p id="donateBody" class="donate__body"></p>
+    <div class="donate__beams" aria-hidden="true"><span></span><span></span></div>
+    <div class="wrap donate__inner">
+      <p class="kicker kicker--gold reveal">Back the Tigers</p>
+      <h2 id="donateHeading" class="reveal">Support the Tigers</h2>
+      <p id="donateBody" class="donate__body reveal"></p>
+
+      <div class="tiers" id="donateTiers"></div>
+      <p class="tiers__picked" id="tierPicked" aria-live="polite"></p>
+
       <div class="donate__methods" id="donateMethods"></div>
     </div>
   </section>
@@ -203,8 +257,10 @@
           </select>
         </label>
         <label>Message <textarea name="message" rows="3"></textarea></label>
-        <button type="submit" class="btn btn--gold">Send</button>
-        <p class="join__formnote">Form is a placeholder — see README to connect it (Formspree / Google Form).</p>
+        <button type="submit" class="btn-bat btn-bat--submit">
+          <span class="btn-bat__handle" aria-hidden="true"></span>
+          <span class="btn-bat__blade">Send it</span>
+        </button>
       </form>
     </div>
   </section>

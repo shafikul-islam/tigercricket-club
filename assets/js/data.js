@@ -17,6 +17,18 @@ window.CLUB = {
   league: "Louisiana Cricket Association (LCA)",
   homeCity: "Baton Rouge, Louisiana",
 
+  /* ---- Hero background ----
+     Leave both empty to use the stadium drawn in code (night match,
+     floodlights, crowd).
+     background: a photo of the ground, e.g. "assets/img/match-action.webp"
+     video: a .mp4/.webm cricket clip (muted, looping), e.g.
+            "assets/video/hero.mp4". A video wins over a photo. */
+  hero: {
+    background: "",
+    video: "", // e.g. "assets/video/hero.mp4"
+    autoSixEverySeconds: 7, // how often the "six" replays on its own
+  },
+
   /* ---- Hero call-to-action links (fill these in later) ---- */
   links: {
     donate: "#donate",
@@ -32,8 +44,8 @@ window.CLUB = {
   stats: [
     { value: 2023, label: "Established", suffix: "" },
     { value: 16, label: "Active Players", suffix: "" },
-    { value: 10, label: "LCA Clubs We Compete With", suffix: "" },
-    { value: 1, label: "Dream: LSU Cricket", suffix: "" },
+    { value: 10, label: "LCA Clubs", suffix: "" },
+    { value: 2027, label: "Target: LSU Team", suffix: "" },
   ],
 
   /* ---- About section ---- */
@@ -117,6 +129,13 @@ window.CLUB = {
     heading: "Support the Tigers",
     body:
       "We're a student club covering our own ground fees, kit, and tournament entries. Every contribution helps us compete and grow toward LSU recognition.",
+    /* Donation tiers, named after cricket scores. Edit amounts freely. */
+    tiers: [
+      { runs: "1", name: "Quick Single", amount: 10, funds: "A new match ball" },
+      { runs: "4", name: "Boundary", amount: 25, funds: "One net session at the ground" },
+      { runs: "6", name: "Maximum", amount: 60, funds: "A share of a tournament entry", featured: true },
+      { runs: "100", name: "Century", amount: 100, funds: "A full player kit" },
+    ],
     methods: [
       { label: "Zelle", detail: "batonrougetigers@gmail.com", note: "Add your real Zelle" },
       { label: "Venmo", detail: "@BRTigersCricket", note: "Add your real handle" },
