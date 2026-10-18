@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baton Rouge Tigers — Cricket Club</title>
+  <meta name="description" content="Baton Rouge Tigers — a student cricket club in the Louisiana Cricket Association, on the road to becoming the LSU Cricket Team." />
+
+  <!-- Social share preview -->
+  <meta property="og:title" content="Baton Rouge Tigers Cricket Club" />
+  <meta property="og:description" content="Student cricket. Championship ambition. The road to LSU Cricket." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/img/team-group.webp" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+  <!-- ===================== NAV ===================== -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#home" class="brand" aria-label="Baton Rouge Tigers home">
+        <span class="brand__mark" aria-hidden="true">
+          <span class="ball"></span>
+        </span>
+        <span class="brand__text">BR <b>TIGERS</b></span>
+      </a>
+
+      <nav class="nav__links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#season">Season</a>
+        <a href="#squad">Squad</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#alumni">Alumni</a>
+        <a href="#thanks">Thanks</a>
+        <a href="#donate" class="btn btn--gold btn--sm">Donate</a>
+      </nav>
+
+      <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" id="home">
+    <div class="hero__stripes" aria-hidden="true"></div>
+    <div class="hero__ball" aria-hidden="true"><span class="ball ball--xl"></span></div>
+
+    <div class="hero__content">
+      <p class="hero__eyebrow" id="heroEyebrow">Louisiana Cricket Association</p>
+      <h1 class="hero__title" id="heroTitle">Baton Rouge<br /><span>Tigers</span></h1>
+      <p class="hero__tag" id="heroTag"></p>
+      <div class="hero__cta">
+        <a href="#donate" class="btn btn--gold">Support the Club</a>
+        <a href="#join" class="btn btn--ghost">Join the Tigers</a>
+      </div>
+    </div>
+
+    <a href="#stats" class="hero__scroll" aria-label="Scroll down"><span></span></a>
+  </section>
+
+  <!-- ===================== STATS ===================== -->
+  <section class="stats" id="stats">
+    <div class="wrap stats__grid" id="statsGrid"></div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="section about" id="about">
+    <div class="wrap about__grid">
+      <div class="about__text reveal">
+        <p class="kicker">Our Story</p>
+        <h2 id="aboutHeading">Who We Are</h2>
+        <div id="aboutBody"></div>
+        <blockquote class="vision" id="aboutVision"></blockquote>
+      </div>
+      <div class="about__media reveal">
+        <img src="assets/img/team-swagat.webp" alt="Baton Rouge Tigers players" loading="lazy" />
+        <div class="about__badge"><b id="aboutFounded">2023</b><span>Established</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" aria-hidden="true"><span class="ball ball--spin"></span></div>
+
+  <!-- ===================== SEASON / DYNAMIC ===================== -->
+  <section class="section season" id="season">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="kicker">On The Field</p>
+        <h2>This Season</h2>
+        <p class="section__sub">Live scores and the league table update automatically once connected — see the README for how to plug in a data source.</p>
+      </div>
+
+      <div class="season__grid">
+        <!-- Live score widget (dynamic) -->
+        <div class="card livescore reveal" id="liveScore">
+          <div class="livescore__head">
+            <span class="live-dot"></span> LIVE / NEXT MATCH
+          </div>
+          <div class="livescore__body" id="liveScoreBody">
+            <p class="muted">Connecting to live feed…</p>
+          </div>
+          <p class="livescore__note" id="liveScoreNote"></p>
+        </div>
+
+        <!-- Recent results -->
+        <div class="card reveal">
+          <h3 class="card__title">Recent Results</h3>
+          <ul class="results" id="resultsList"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SQUAD ===================== -->
+  <section class="section squad" id="squad">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="kicker">The Roster</p>
+        <h2>Meet the Squad</h2>
+        <p class="section__sub">The players carrying the Tigers this season.</p>
+      </div>
+      <div class="squad__grid" id="squadGrid"></div>
+    </div>
+  </section>
+
+  <div class="divider" aria-hidden="true"><span class="ball ball--spin"></span></div>
+
+  <!-- ===================== GALLERY ===================== -->
+  <section class="section gallery" id="gallery">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="kicker">Moments</p>
+        <h2>Gallery</h2>
+      </div>
+      <div class="gallery__grid" id="galleryGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ALUMNI ===================== -->
+  <section class="section alumni" id="alumni">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="kicker">Tigers Forever</p>
+        <h2>Alumni</h2>
+        <p class="section__sub">The players who built the foundation. <a id="fbLink" href="#" target="_blank" rel="noopener">Join the alumni group →</a></p>
+      </div>
+      <div class="alumni__grid" id="alumniGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== SPECIAL THANKS ===================== -->
+  <section class="section thanks" id="thanks">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <p class="kicker">Gratitude</p>
+        <h2>Special Thanks</h2>
+        <p class="section__sub">People from across the Louisiana cricket family who helped the Tigers get started.</p>
+      </div>
+      <div class="thanks__grid" id="thanksGrid"></div>
+
+      <div class="sponsors" id="sponsors">
+        <p class="sponsors__label">Our Sponsor</p>
+        <div class="sponsors__grid" id="sponsorsGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DONATE ===================== -->
+  <section class="section donate" id="donate">
+    <div class="donate__stripes" aria-hidden="true"></div>
+    <div class="wrap donate__inner reveal">
+      <h2 id="donateHeading">Support the Tigers</h2>
+      <p id="donateBody" class="donate__body"></p>
+      <div class="donate__methods" id="donateMethods"></div>
+    </div>
+  </section>
+
+  <!-- ===================== JOIN / CONTACT ===================== -->
+  <section class="section join" id="join">
+    <div class="wrap join__grid">
+      <div class="reveal">
+        <p class="kicker">Get Involved</p>
+        <h2>Play, support, or sponsor</h2>
+        <p>Students and players welcome. Reach out and we'll get you to the next net session.</p>
+        <p class="join__contact">
+          <a id="emailLink" href="#">✉ Email us</a>
+          <a id="fbLink2" href="#" target="_blank" rel="noopener">★ Facebook group</a>
+        </p>
+      </div>
+      <form class="join__form reveal" id="joinForm" action="#" method="post">
+        <label>Name <input type="text" name="name" required /></label>
+        <label>Email <input type="email" name="email" required /></label>
+        <label>I want to…
+          <select name="interest">
+            <option>Play for the Tigers</option>
+            <option>Support / donate</option>
+            <option>Sponsor the club</option>
+          </select>
+        </label>
+        <label>Message <textarea name="message" rows="3"></textarea></label>
+        <button type="submit" class="btn btn--gold">Send</button>
+        <p class="join__formnote">Form is a placeholder — see README to connect it (Formspree / Google Form).</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div class="footer__brand">
+        <span class="brand__text">BR <b>TIGERS</b></span>
+        <p id="footerTag"></p>
+      </div>
+      <nav class="footer__nav">
+        <a href="#about">About</a>
+        <a href="#squad">Squad</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#donate">Donate</a>
+        <a id="footerLca" href="#" target="_blank" rel="noopener">LCA</a>
+      </nav>
+    </div>
+    <p class="footer__copy">© <span id="year"></span> Baton Rouge Tigers Cricket Club · Baton Rouge, Louisiana</p>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
